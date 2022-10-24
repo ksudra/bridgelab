@@ -31,13 +31,17 @@ architecture dataflow of state_machine is
     begin
       CASE curState is
       when idle =>
-        if HTRANS = "10" then
+        if rstn = '1' then
+          nextState <= idle;
+        elsif HTRANS = "10" then
           nextState <= instr_fetch;
         else
           nextState <= idle;
         end if;
       when instr_fetch =>
-        if dmao.ready = '1' then
+        if rstn = '1' then
+          nextState <= idle;
+        elsif dmao.ready = '1' then
           nextState <= idle;
         else
           nextState <= instr_fetch;
@@ -59,3 +63,4 @@ architecture dataflow of state_machine is
       end case;
     end process;
 end;
+
