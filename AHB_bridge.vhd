@@ -99,8 +99,8 @@ inst_ahbmst : ahbmst
 		rst => rstn,
 		dmao => dmao,
 		dmai => dmai,
-		ahbo => ahbo,
-		ahbi => ahbi
+		ahbo => ahbmo,
+		ahbi => ahbmi
 	);
 --instantiate the data_swapper component and make the connections
 inst_data_swapper : data_swapper
