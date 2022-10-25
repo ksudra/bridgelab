@@ -1,3 +1,4 @@
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -24,7 +25,7 @@ entity state_machine is
     );
 end;
 architecture dataflow of state_machine is
-  type state_type is (idle, instr_fetch);
+  type state_type is (idle, start, instr_fetch);
   signal curState, nextState:state_type;
   begin
     state_reg: process(clkm, rstn)
@@ -38,21 +39,19 @@ architecture dataflow of state_machine is
 		end if;
 	  end process;
     
-    state_trans: process(curState, nextState)
+    state_trans: process(curState, HTRANS, dmao.ready)
     begin
       CASE curState is
       when idle =>
-        if rstn = '1' then
-          nextState <= idle;
-        elsif HTRANS = "10" then
-          nextState <= instr_fetch;
+        if HTRANS = "10" then
+          nextState <= start;
         else
           nextState <= idle;
         end if;
+      when start =>
+        nextState <= instr_fetch;
       when instr_fetch =>
-        if rstn = '1' then
-          nextState <= idle;
-        elsif dmao.ready = '1' then
+        if dmao.ready = '1' then
           nextState <= idle;
         else
           nextState <= instr_fetch;
@@ -61,15 +60,19 @@ architecture dataflow of state_machine is
         nextState <= idle;
       end case;
     end process;
+    
     state_out: process(curState)
     begin
       CASE curState is
       when idle =>
         HREADY <= '1';
         dmai.start <= '0';
+      when start =>
+        HREADY <= '1';
+        dmai.start <= '1';
       when instr_fetch =>
         HREADY <= '0';
-        dmai.start <= '1';
+        dmai.start <= '0';
       when OTHERS =>
       end case;
     end process;
