@@ -67,18 +67,37 @@ end component;
 
 --declare a component for data_swapper 
 
-component swapper is
+component data_swapper is
   port (
     reset : in std_logic;
     dmao_data : in std_logic_vector (31 downto 0);
     hrdata : out std_logic_vector (31 downto 0)
     );
 end component;
- 
+
 signal dmai : ahb_dma_in_type;
 signal dmao : ahb_dma_out_type;
 begin
 --instantiate state_machine component and make the connections
+inst_state_machine : state_machine
+  port map(
+    clkm => clkm,
+    rstn => rstn,
+    dmao => dmao,
+    dmai => dmai,
+    HSIZE => HSIZE,
+    HTRANS => HTRANS,
+    HADDR => HADDR,
+    HWRITE => HWRITE,
+    HWDATA => HWDATA,
+    HREADY => HREADY
+  );
 --instantiate the ahbmst component and make the connections 
 --instantiate the data_swapper component and make the connections
+inst_data_swapper : data_swapper
+  port map(
+    reset => rstn,
+    dmao_data => dmao.rdata,
+    hrdata => HRDATA
+  );
 end structural;
