@@ -1,4 +1,3 @@
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -28,6 +27,17 @@ architecture dataflow of state_machine is
   type state_type is (idle, instr_fetch);
   signal curState, nextState:state_type;
   begin
+    state_reg: process(clkm, rstn)
+      begin
+	  if rstn = '0' then
+	     curState <= idle;
+		elsif rising_edge(clkm) then
+			curState <= nextState;
+		else
+			curState <= curState;
+		end if;
+	  end process;
+    
     state_trans: process(curState, nextState)
     begin
       CASE curState is
@@ -64,3 +74,4 @@ architecture dataflow of state_machine is
       end case;
     end process;
 end;
+
