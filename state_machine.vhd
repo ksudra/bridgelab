@@ -1,4 +1,3 @@
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -28,6 +27,13 @@ architecture dataflow of state_machine is
   type state_type is (idle, start, instr_fetch);
   signal curState, nextState:state_type;
   begin
+    dmai.size <= HSIZE;
+    dmai.address <= HADDR;
+    dmai.write <= HWRITE;
+    dmai.wdata <= HWDATA;
+    dmai.burst <= '0';
+    dmai.busy <= '0';
+    dmai.irq <= '0';
     state_reg: process(clkm, rstn)
       begin
 	  if rstn = '0' then
