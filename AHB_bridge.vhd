@@ -93,11 +93,20 @@ inst_state_machine : state_machine
     HREADY => HREADY
   );
 --instantiate the ahbmst component and make the connections 
+inst_ahbmst : ahbmst
+  port map(
+		clk => clkm,
+		rst => rstn,
+		dmao => dmao,
+		dmai => dmai,
+		ahbo => ahbo,
+		ahbi => ahbi
+	);
 --instantiate the data_swapper component and make the connections
 inst_data_swapper : data_swapper
   port map(
     reset => rstn,
-    dmao_data => dmao.rdata,
+    dmao_data => dmao.rdata(31 downto 0),
     hrdata => HRDATA
   );
 end structural;
