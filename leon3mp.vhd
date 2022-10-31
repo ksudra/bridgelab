@@ -40,6 +40,9 @@ use gaisler.jtag.all;
 library esa;
 use esa.memoryctrl.all;
 use work.config.all;
+library SIMPRIM;
+use SIMPRIM.VCOMPONENTS.ALL;
+use SIMPRIM.VPACKAGE.ALL;
 
 entity leon3mp is
   generic (
@@ -143,7 +146,9 @@ architecture rtl of leon3mp is
   signal ahbso : ahb_slv_out_vector := (others => ahbs_none);
   signal ahbmi : ahb_mst_in_type;
   signal ahbmo : ahb_mst_out_vector := (others => ahbm_none);
-
+  signal ahbmo_hconfig : STD_LOGIC_VECTOR2 ( 7 downto 0 , 31 downto 0 );
+  signal ahbmo_hindex : STD_LOGIC_VECTOR ( 3 downto 0 );
+  
   signal cgi : clkgen_in_type;
   signal cgo : clkgen_out_type;
 
@@ -218,6 +223,35 @@ architecture rtl of leon3mp is
     );
   end component;
   
+  component cm0_wrapper_timesim is
+  port (
+    clkm : in STD_LOGIC := 'X'; 
+    rstn : in STD_LOGIC := 'X'; 
+    ahbmi_hready : in STD_LOGIC := 'X'; 
+    ahbmi_hcache : in STD_LOGIC := 'X'; 
+    ahbmi_testen : in STD_LOGIC := 'X'; 
+    ahbmi_testrst : in STD_LOGIC := 'X'; 
+    ahbmi_scanen : in STD_LOGIC := 'X'; 
+    ahbmi_testoen : in STD_LOGIC := 'X'; 
+    ahbmo_hbusreq : out STD_LOGIC; 
+    ahbmo_hlock : out STD_LOGIC; 
+    ahbmo_hwrite : out STD_LOGIC; 
+    ahbmi_hgrant : in STD_LOGIC_VECTOR ( 0 to 15 ); 
+    ahbmi_hresp : in STD_LOGIC_VECTOR ( 1 downto 0 ); 
+    ahbmi_hrdata : in STD_LOGIC_VECTOR ( 31 downto 0 ); 
+    ahbmi_hirq : in STD_LOGIC_VECTOR ( 31 downto 0 ); 
+    ahbmo_htrans : out STD_LOGIC_VECTOR ( 1 downto 0 ); 
+    ahbmo_haddr : out STD_LOGIC_VECTOR ( 31 downto 0 ); 
+    ahbmo_hsize : out STD_LOGIC_VECTOR ( 2 downto 0 ); 
+    ahbmo_hburst : out STD_LOGIC_VECTOR ( 2 downto 0 ); 
+    ahbmo_hprot : out STD_LOGIC_VECTOR ( 3 downto 0 ); 
+    ahbmo_hwdata : out STD_LOGIC_VECTOR ( 31 downto 0 ); 
+    ahbmo_hirq : out STD_LOGIC_VECTOR ( 31 downto 0 ); 
+    ahbmo_hconfig : out STD_LOGIC_VECTOR2 ( 7 downto 0 , 31 downto 0 ); 
+    ahbmo_hindex : out STD_LOGIC_VECTOR ( 3 downto 0 ) 
+  );
+  end component;
+  
 begin
 
 ----------------------------------------------------------------------
@@ -228,6 +262,7 @@ begin
   gnd <= '0';
   cgi.pllctrl <= "00";
   cgi.pllrst <= rstraw;
+  ahbmo_hindex <= conv_std_logic_vector(ahbmo(0).hindex, 8);
 
   -- Glitch free reset that can be used for the Eth Phy and flash memory
   reset_o1 <= rstn;
@@ -261,6 +296,37 @@ begin
   -- instance of your wrapper with correct port mapping that then creates instances of the M0 processor and bridge 
     u1 : cm0_wrapper
       port map (clkm,rstn,ahbmi,ahbmo(0));
+  end generate;
+  
+  cm0timesim : if CFG_CM0_timesim = 1 generate
+  -- instance of your wrapper with correct port mapping that then creates instances of the M0 processor and bridge 
+    u2 : cm0_wrapper_timesim
+      port map (
+      clkm, 
+      rstn, 
+      ahbmi_hready => ahbmi.hready, 
+      ahbmi_hcache => ahbmi.hcache, 
+      ahbmi_testen => ahbmi.testen, 
+      ahbmi_testrst => ahbmi.testrst, 
+      ahbmi_scanen => ahbmi.scanen, 
+      ahbmi_testoen => ahbmi.testoen, 
+      ahbmo_hbusreq => ahbmo(0).hbusreq, 
+      ahbmo_hlock => ahbmo(0).hlock, 
+      ahbmo_hwrite => ahbmo(0).hwrite, 
+      ahbmi_hgrant => ahbmi.hgrant, 
+      ahbmi_hresp => ahbmi.hresp, 
+      ahbmi_hrdata => ahbmi.hrdata, 
+      ahbmi_hirq => ahbmi.hirq, 
+      ahbmo_htrans => ahbmo(0).htrans, 
+      ahbmo_haddr => ahbmo(0).haddr, 
+      ahbmo_hsize => ahbmo(0).hsize, 
+      ahbmo_hburst => ahbmo(0).hburst, 
+      ahbmo_hprot => ahbmo(0).hprot, 
+      ahbmo_hwdata => ahbmo(0).hwdata, 
+      ahbmo_hirq => ahbmo(0).hirq, 
+      ahbmo_hconfig => ahbmo_hconfig, 
+      ahbmo_hindex => ahbmo_hindex
+      );
   end generate;
 
 ----------------------------------------------------------------------
