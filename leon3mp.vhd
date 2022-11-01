@@ -223,35 +223,6 @@ architecture rtl of leon3mp is
     );
   end component;
   
-  component cm0_wrapper_timesim is
-  port (
-    clkm : in STD_LOGIC := 'X'; 
-    rstn : in STD_LOGIC := 'X'; 
-    ahbmi_hready : in STD_LOGIC := 'X'; 
-    ahbmi_hcache : in STD_LOGIC := 'X'; 
-    ahbmi_testen : in STD_LOGIC := 'X'; 
-    ahbmi_testrst : in STD_LOGIC := 'X'; 
-    ahbmi_scanen : in STD_LOGIC := 'X'; 
-    ahbmi_testoen : in STD_LOGIC := 'X'; 
-    ahbmo_hbusreq : out STD_LOGIC; 
-    ahbmo_hlock : out STD_LOGIC; 
-    ahbmo_hwrite : out STD_LOGIC; 
-    ahbmi_hgrant : in STD_LOGIC_VECTOR ( 0 to 15 ); 
-    ahbmi_hresp : in STD_LOGIC_VECTOR ( 1 downto 0 ); 
-    ahbmi_hrdata : in STD_LOGIC_VECTOR ( 31 downto 0 ); 
-    ahbmi_hirq : in STD_LOGIC_VECTOR ( 31 downto 0 ); 
-    ahbmo_htrans : out STD_LOGIC_VECTOR ( 1 downto 0 ); 
-    ahbmo_haddr : out STD_LOGIC_VECTOR ( 31 downto 0 ); 
-    ahbmo_hsize : out STD_LOGIC_VECTOR ( 2 downto 0 ); 
-    ahbmo_hburst : out STD_LOGIC_VECTOR ( 2 downto 0 ); 
-    ahbmo_hprot : out STD_LOGIC_VECTOR ( 3 downto 0 ); 
-    ahbmo_hwdata : out STD_LOGIC_VECTOR ( 31 downto 0 ); 
-    ahbmo_hirq : out STD_LOGIC_VECTOR ( 31 downto 0 ); 
-    ahbmo_hconfig : out STD_LOGIC_VECTOR2 ( 7 downto 0 , 31 downto 0 ); 
-    ahbmo_hindex : out STD_LOGIC_VECTOR ( 3 downto 0 ) 
-  );
-  end component;
-  
 begin
 
 ----------------------------------------------------------------------
@@ -288,8 +259,6 @@ begin
                  nahbm => CFG_NCPU+CFG_AHB_UART+CFG_AHB_JTAG+CFG_GRETH+CFG_SVGA_ENABLE, 
                  nahbs => 8)
     port map (rstn, clkm, ahbmi, ahbmo, ahbsi, ahbso);
-      
-
 
   --Cortex-M0 processor 
   cm0gen : if CFG_CM0 = 1 generate
@@ -297,37 +266,6 @@ begin
     u1 : cm0_wrapper
       port map (clkm,rstn,ahbmi,ahbmo(0));
   end generate;
-  
---  cm0timesim : if CFG_CM0_timesim = 1 generate
-  -- instance of your wrapper with correct port mapping that then creates instances of the M0 processor and bridge 
---    u2 : cm0_wrapper_timesim
---      port map (
---      clkm, 
---      rstn, 
---      ahbmi_hready => ahbmi.hready, 
---      ahbmi_hcache => ahbmi.hcache, 
---      ahbmi_testen => ahbmi.testen, 
---      ahbmi_testrst => ahbmi.testrst, 
---      ahbmi_scanen => ahbmi.scanen, 
---      ahbmi_testoen => ahbmi.testoen, 
---      ahbmo_hbusreq => ahbmo(0).hbusreq, 
---      ahbmo_hlock => ahbmo(0).hlock, 
---      ahbmo_hwrite => ahbmo(0).hwrite, 
---      ahbmi_hgrant => ahbmi.hgrant, 
---      ahbmi_hresp => ahbmi.hresp, 
---      ahbmi_hrdata => ahbmi.hrdata, 
---      ahbmi_hirq => ahbmi.hirq, 
---      ahbmo_htrans => ahbmo(0).htrans, 
---      ahbmo_haddr => ahbmo(0).haddr, 
---      ahbmo_hsize => ahbmo(0).hsize, 
---      ahbmo_hburst => ahbmo(0).hburst, 
---      ahbmo_hprot => ahbmo(0).hprot, 
---      ahbmo_hwdata => ahbmo(0).hwdata, 
---      ahbmo_hirq => ahbmo(0).hirq, 
---      ahbmo_hconfig => ahbmo_hconfig, 
---      ahbmo_hindex => ahbmo_hindex
---      );
---  end generate;
 
 ----------------------------------------------------------------------
 ---  LEON3 processor and DSU -----------------------------------------
