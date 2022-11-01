@@ -298,36 +298,36 @@ begin
       port map (clkm,rstn,ahbmi,ahbmo(0));
   end generate;
   
-  cm0timesim : if CFG_CM0_timesim = 1 generate
+--  cm0timesim : if CFG_CM0_timesim = 1 generate
   -- instance of your wrapper with correct port mapping that then creates instances of the M0 processor and bridge 
-    u2 : cm0_wrapper_timesim
-      port map (
-      clkm, 
-      rstn, 
-      ahbmi_hready => ahbmi.hready, 
-      ahbmi_hcache => ahbmi.hcache, 
-      ahbmi_testen => ahbmi.testen, 
-      ahbmi_testrst => ahbmi.testrst, 
-      ahbmi_scanen => ahbmi.scanen, 
-      ahbmi_testoen => ahbmi.testoen, 
-      ahbmo_hbusreq => ahbmo(0).hbusreq, 
-      ahbmo_hlock => ahbmo(0).hlock, 
-      ahbmo_hwrite => ahbmo(0).hwrite, 
-      ahbmi_hgrant => ahbmi.hgrant, 
-      ahbmi_hresp => ahbmi.hresp, 
-      ahbmi_hrdata => ahbmi.hrdata, 
-      ahbmi_hirq => ahbmi.hirq, 
-      ahbmo_htrans => ahbmo(0).htrans, 
-      ahbmo_haddr => ahbmo(0).haddr, 
-      ahbmo_hsize => ahbmo(0).hsize, 
-      ahbmo_hburst => ahbmo(0).hburst, 
-      ahbmo_hprot => ahbmo(0).hprot, 
-      ahbmo_hwdata => ahbmo(0).hwdata, 
-      ahbmo_hirq => ahbmo(0).hirq, 
-      ahbmo_hconfig => ahbmo_hconfig, 
-      ahbmo_hindex => ahbmo_hindex
-      );
-  end generate;
+--    u2 : cm0_wrapper_timesim
+--      port map (
+--      clkm, 
+--      rstn, 
+--      ahbmi_hready => ahbmi.hready, 
+--      ahbmi_hcache => ahbmi.hcache, 
+--      ahbmi_testen => ahbmi.testen, 
+--      ahbmi_testrst => ahbmi.testrst, 
+--      ahbmi_scanen => ahbmi.scanen, 
+--      ahbmi_testoen => ahbmi.testoen, 
+--      ahbmo_hbusreq => ahbmo(0).hbusreq, 
+--      ahbmo_hlock => ahbmo(0).hlock, 
+--      ahbmo_hwrite => ahbmo(0).hwrite, 
+--      ahbmi_hgrant => ahbmi.hgrant, 
+--      ahbmi_hresp => ahbmi.hresp, 
+--      ahbmi_hrdata => ahbmi.hrdata, 
+--      ahbmi_hirq => ahbmi.hirq, 
+--      ahbmo_htrans => ahbmo(0).htrans, 
+--      ahbmo_haddr => ahbmo(0).haddr, 
+--      ahbmo_hsize => ahbmo(0).hsize, 
+--      ahbmo_hburst => ahbmo(0).hburst, 
+--      ahbmo_hprot => ahbmo(0).hprot, 
+--      ahbmo_hwdata => ahbmo(0).hwdata, 
+--      ahbmo_hirq => ahbmo(0).hirq, 
+--      ahbmo_hconfig => ahbmo_hconfig, 
+--      ahbmo_hindex => ahbmo_hindex
+--      );
+--  end generate;
 
 ----------------------------------------------------------------------
 ---  LEON3 processor and DSU -----------------------------------------
