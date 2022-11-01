@@ -7,6 +7,7 @@
 -- File:	ahbrom.vhd
 -- Author:	Jiri Gaisler - Gaisler Research
 -- Description:	AHB rom. 0/1-waitstate read
+----------------------------------------------------------------------------
 -- group 06
 -- eo20203
 -- dm22509
