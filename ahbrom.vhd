@@ -7,6 +7,11 @@
 -- File:	ahbrom.vhd
 -- Author:	Jiri Gaisler - Gaisler Research
 -- Description:	AHB rom. 0/1-waitstate read
+-- group 06
+-- eo20203
+-- dm22509
+-- nz20469
+-- bi20475
 ----------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
