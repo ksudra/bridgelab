@@ -1,3 +1,9 @@
+-- group 06
+-- eo20203
+-- dm22509
+-- nz20469
+-- bi20475
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
