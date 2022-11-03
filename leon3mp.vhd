@@ -46,9 +46,6 @@ use gaisler.jtag.all;
 library esa;
 use esa.memoryctrl.all;
 use work.config.all;
-library SIMPRIM;
-use SIMPRIM.VCOMPONENTS.ALL;
-use SIMPRIM.VPACKAGE.ALL;
 
 entity leon3mp is
   generic (
@@ -152,7 +149,6 @@ architecture rtl of leon3mp is
   signal ahbso : ahb_slv_out_vector := (others => ahbs_none);
   signal ahbmi : ahb_mst_in_type;
   signal ahbmo : ahb_mst_out_vector := (others => ahbm_none);
-  signal ahbmo_hconfig : STD_LOGIC_VECTOR2 ( 7 downto 0 , 31 downto 0 );
   signal ahbmo_hindex : STD_LOGIC_VECTOR ( 3 downto 0 );
   
   signal cgi : clkgen_in_type;
